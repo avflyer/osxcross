@@ -511,28 +511,23 @@ function test_compiler_cxx2b()
 function build_xar()
 {
   pushd $BUILD_DIR &>/dev/null
-
-  get_sources https://github.com/tpoechtrager/xar.git master
-
-  if [ $f_res -eq 1 ]; then
-    pushd $CURRENT_BUILD_PROJECT_NAME/xar &>/dev/null
+  wget --progress=dot:giga --no-check-certificate https://github.com/tpoechtrager/xar/archive/refs/heads/master.zip -O xar.zip && mkdir xar && unzip xar.zip -d xar && mv xar/xar-master/* xar/ && rm -r xar/xar-master && rm xar.zip
+    pushd xar/xar &>/dev/null
     CFLAGS+=" -w" \
       ./configure --prefix=$TARGET_DIR
     $MAKE -j$JOBS
     $MAKE install -j$JOBS
     popd &>/dev/null
     build_success
-  fi
-
   popd &>/dev/null
 }
 
 function build_p7zip()
 {
-  get_sources https://github.com/tpoechtrager/p7zip.git master
+  wget --progress=dot:giga --no-check-certificate https://github.com/tpoechtrager/p7zip/archive/refs/heads/master.zip -O p7zip.zip && mkdir p7zip && unzip p7zip.zip -d p7zip && mv p7zip/p7zip-master/* p7zip/ && rm -r p7zip/p7zip-master && rm p7zip.zip
 
   if [ $f_res -eq 1 ]; then
-    pushd $CURRENT_BUILD_PROJECT_NAME &>/dev/null
+    pushd p7zip &>/dev/null
 
     if [ -n "$CC" ] && [ -n "$CXX" ]; then
       [[ $CC == *clang* ]] && CC="$CC -Qunused-arguments"
@@ -552,10 +547,9 @@ function build_p7zip()
 
 function build_pbxz()
 {
-  get_sources https://github.com/tpoechtrager/pbzx.git master
+  wget --progress=dot:giga --no-check-certificate https://github.com/tpoechtrager/pbzx/archive/refs/heads/master.zip -O pbzx.zip && mkdir pbzx && unzip pbzx.zip -d pbzx && mv pbzx/pbzx-master/* pbzx/ && rm -r pbzx/pbzx-master && rm pbzx.zip
 
-  if [ $f_res -eq 1 ]; then
-    pushd $CURRENT_BUILD_PROJECT_NAME &>/dev/null
+    pushd pbzx &>/dev/null
     mkdir -p $TARGET_DIR_SDK_TOOLS/bin
     verbose_cmd $CC -O2 -Wall \
                 -I $TARGET_DIR/include -L $TARGET_DIR/lib pbzx.c \
@@ -563,7 +557,7 @@ function build_pbxz()
                 -Wl,-rpath,$TARGET_DIR/lib
     build_success
     popd &>/dev/null
-  fi
+
 }
 
 

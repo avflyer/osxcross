@@ -117,15 +117,15 @@ build_xar
 ## Apple TAPI Library ##
 
 if [ $NEED_TAPI_SUPPORT -eq 1 ]; then
-  get_sources https://github.com/tpoechtrager/apple-libtapi.git 1300.6.5
+  wget --progress=dot:giga --no-check-certificate https://github.com/tpoechtrager/apple-libtapi/archive/refs/heads/1300.6.5.zip -O apple-libtapi.zip && mkdir apple-libtapi && unzip apple-libtapi.zip -d apple-libtapi && mv apple-libtapi/apple-libtapi-1300.6.5/* apple-libtapi/ && rm -r apple-libtapi/apple-libtapi-1300.6.5 && rm apple-libtapi.zip
 
-  if [ $f_res -eq 1 ]; then
-    pushd $CURRENT_BUILD_PROJECT_NAME &>/dev/null
+
+    pushd apple-libtapi &>/dev/null
     INSTALLPREFIX=$TARGET_DIR ./build.sh
     ./install.sh
     popd &>/dev/null
     build_success
-  fi
+
 fi
 
 ## cctools and ld64 ##
@@ -133,12 +133,9 @@ fi
 CCTOOLS_VERSION=986
 LINKER_VERSION=711
 
-get_sources \
-  https://github.com/tpoechtrager/cctools-port.git \
-  $CCTOOLS_VERSION-ld64-$LINKER_VERSION
+wget --progress=dot:giga --no-check-certificate https://github.com/tpoechtrager/cctools-port/archive/refs/heads/986-ld64-711.zip -O cctools-port.zip && mkdir cctools-port && unzip cctools-port.zip -d cctools-port && mv cctools-port/cctools-port-986-ld64-711/* cctools-port/ && rm -r cctools-port/cctools-port-986-ld64-711 && rm cctools-port.zip
 
-if [ $f_res -eq 1 ]; then
-  pushd $CURRENT_BUILD_PROJECT_NAME/cctools &>/dev/null
+  pushd cctools-port/cctools &>/dev/null
   echo ""
 
   CONFFLAGS="--prefix=$TARGET_DIR --target=x86_64-apple-$TARGET "
@@ -152,7 +149,6 @@ if [ $f_res -eq 1 ]; then
   $MAKE -j$JOBS
   $MAKE install -j$JOBS
   popd &>/dev/null
-fi
 
 ## Create Arch Symlinks ##
 
